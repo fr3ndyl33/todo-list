@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Inang: 127.0.0.1
--- Waktu pembuatan: 25 Jun 2015 pada 06.24
+-- Waktu pembuatan: 25 Jun 2015 pada 19.46
 -- Versi Server: 5.5.27
 -- Versi PHP: 5.4.7
 
@@ -30,7 +30,8 @@ CREATE TABLE IF NOT EXISTS `list` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `topic` varchar(255) NOT NULL,
   `created_at` datetime NOT NULL,
-  `deleted_at` datetime NOT NULL,
+  `done_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 

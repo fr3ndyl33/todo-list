@@ -1,59 +1,27 @@
-# Blog Engine Sederhana
+# To Do List
 
-Repository ini berisi contoh implementasi blog engine sederhana dengan NodeJS dan ExpressJS. Commit yang ada di repository memperlihatkan perkembangan kode, tahap demi tahap, yang bisa juga dijadikan bahan pembelajaran.
+Aplikasi To Do List sederhana untuk tugas Pemrogramman Web Lanjutan menggunakan NodeJS dan ExpressJS.
 
-Untuk melihat seluruh commit yang ada gunakan perintah:
+Aplikasi yang dibuat mengikuti ketentuan utama detail dari soal yakni:
 
-    $ git log
+1. Warna setiap elemen data berganti antara putih dan abu-abu (lihat gambar pertama).
+2. Data todo disimpan dalam sebuah basis data.
+3. Tidak terdapat fasilitas untuk mengedit catatan, hanya membuat baru dan menghapus saja.
 
-Kalau ingin melihat seluruh isi file pada commit tertentu, jalankan perintah:
 
-    $ git checkout <nomor-commit>
+Improvisasi dari gambaran aplikasi yang sudah ditetapkan yakni:
 
-Misalnya untuk melihat commit paling pertama:
+1. aktivitas input dan edit data menggunakan ajax
+2. list yang sudah di-done/centang muncul di kotak Already Done sebelum di delete
 
-    $ git checkout 03c7f40
 
-Kalau mau kembali ke kode terbaru, checkout ke `HEAD`:
+Database yang digunakan adalah MySQL, dengan model tabel sesuai dengan yang ada pada pada direktori `data`.
 
-    $ git checkout HEAD
 
-Jika ingin melihat seluruh nomor commit yang ada dengan lebih mudah, gunakan perintah:
+## Biodata
 
-    $ git log --oneline
+Nama  : Frendy
 
-## Dependencies
+NIM   : 12 111 0090
 
-Sebelum bisa menjalankan blog, pastikan beberapa hal telah ada:
-
-1. Database MySQL atau MariaDB, dengan model tabel sesuai dengan yang ada pada pada direktori `data`.
-2. Environment variabel berikut dikonfigurasikan:
-
-    a. `MARIADB_HOST`, berisi *hostname* dari sistem basis data.
-    b. `MARIADB_USER`, berisi pengguna yang dapat mengakses basis data.
-    c. `MARIADB_PASSWORD`, berisi password pengguna pada (b).
-    d. `MARIADB_DB_BLOG`, berisi nama basis data yang akan digunakan.
-
-Dari sisi NodeJS, sebelum memasang *dependency* melalui `npm`, terlebih dahulu jalankan perintah berikut (pada Windows):
-
-    $ npm install -g gulp
-    $ npm install -g node-gyp
-
-untuk pengguna Linux dan Mac, gunakan sudo:
-
-    $ sudo npm install -g gulp
-    $ sudo npm install -g node-gyp
-
-Setelah perintah selesai dieksekusi, pasang *dependency* dengan perintah:
-
-    $ npm install
-
-baik di Mac, Windows, ataupun Linux. 
-
-## Menjalankan Blog
-
-Hanya ada satu perintah untuk menjalankan blog, yaitu:
-
-    $ gulp server
-
-Dan blog akan dapat diakses pada `http://localhost:3000/`.
+Kelas : MW - A SORE

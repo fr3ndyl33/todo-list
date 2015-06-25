@@ -8,15 +8,16 @@ var mysql  = require('mysql'),
         supportBigNumbers: true
     });
 
-exports.CheckUserExists = function (username, callback) {
-    var query = "SELECT * FROM users u WHERE u.username = ?;";
-    
-    queryDatabase(query, [username], callback);
+exports.GetLists = function (count, callback) {
+    var query = "SELECT * FROM list where list.deleted_at IS NULL ORDER BY list.created_at ASC LIMIT ?;",
+        count = count || 10;
+
+    queryDatabase(query, [count], callback);
 };
 
-exports.GetLists = function (count, callback) {
-    var query = "SELECT * FROM list where list.deleted_at = NULL ORDER BY list.created_at DESC LIMIT ?;",
-        count = count || 10;
+exports.GetLatestLists = function (count, callback) {
+    var query = "SELECT * FROM list where list.deleted_at IS NULL AND list.done_at IS NULL ORDER BY list.created_at DESC LIMIT 1;";        
+    count = count || 1;
 
     queryDatabase(query, [count], callback);
 };
@@ -26,6 +27,18 @@ exports.CreateNewList = function (topic, callback) {
                 "VALUES (?, NOW());";
 
     queryDatabase(query, [topic], callback);
+};
+
+exports.DoneList = function (id, callback) {
+    var query = "UPDATE list SET `done_at` = NOW() WHERE `id` = ? ;";
+
+    queryDatabase(query, [id], callback);
+};
+
+exports.DeleteList = function (id, callback) {
+    var query = "UPDATE list SET `deleted_at` = NOW() WHERE `id` = ? ;";
+
+    queryDatabase(query, [id], callback);
 };
 
 function queryDatabase(query, data, callback) {

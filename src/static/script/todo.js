@@ -3,20 +3,16 @@ $("#sortable").disableSelection();
 
 countTodos();
 
-// all done btn
-$("#checkAll").click(function(){
-    AllDone();
-});
-
 //create todo
 $('.add-todo').on('keypress',function (e) {
       e.preventDefault
       if (e.which == 13) {
            if($(this).val() != ''){
-           var todo = $(this).val();
-            createTodo(todo); 
-            countTodos();
-            $.get("/post/create", {topic: todo}, function(res){console.log(res)},'text');
+           var todo = $(this).val();                      
+            $.get("/post/create", {topic: todo}, function(res){
+              data = JSON.parse(res);              
+              createTodo(todo, data.id);               
+            },'text');
            }else{
                // some validation
            }
@@ -27,8 +23,8 @@ $('.todolist').on('change','#sortable li input[type="checkbox"]',function(){
     if($(this).prop('checked')){
         var doneItem = $(this).parent().parent().find('label').text();
         $(this).parent().parent().parent().addClass('remove');
-        done(doneItem);
-        countTodos();
+        var id = $(this).attr('id');
+        done(doneItem, id);              
     }
 });
 
@@ -40,43 +36,54 @@ $('.todolist').on('click','.remove-item',function(){
 // count tasks
 function countTodos(){
     var count = $("#sortable li").length;
-    $('.count-todos').html(count);
+    if(count > 0)
+      $('.count-todos').html(count+" Items Left");
+    else
+      $('.count-todos').html("Nothing To do yet!");
 }
 
 //create task
-function createTodo(text){
-    var markup = '<li class="ui-state-default"><div class="checkbox"><label><input type="checkbox" value="" />'+ text +'</label></div></li>';
-    $('#sortable').append(markup);
+function createTodo(text, id){
+    var markup = '<li class="ui-state-default"><div class="checkbox"><label><input type="checkbox" id="'+id+'" value="" />'+ text +'</label></div></li>';
+    $('#sortable').prepend(markup);
     $('.add-todo').val('');
+    countTodos();
 }
-
-//mark task as done
-function done(doneItem){
-    var done = doneItem;
-    var markup = '<li>'+ done +'<button class="btn btn-default btn-xs pull-right  remove-item"><span class="glyphicon glyphicon-remove"></span></button></li>';
-    $('#done-items').append(markup);
+function createDone(text, id){
+    var markup = '<li>'+ text +'<button id="'+id+'" class="btn btn-default btn-xs pull-right remove-item"><span class="glyphicon glyphicon-remove"></span>Delete</button></li>';
+    $('#done-items').prepend(markup);
     $('.remove').remove();
 }
 
-//mark all tasks as done
-function AllDone(){
-    var myArray = [];
-
-    $('#sortable li').each( function() {
-         myArray.push($(this).text());   
-    });
-    
-    // add to done
-    for (i = 0; i < myArray.length; i++) {
-        $('#done-items').append('<li>' + myArray[i] + '<button class="btn btn-default btn-xs pull-right  remove-item"><span class="glyphicon glyphicon-remove"></span></button></li>');
-    }
-    
-    // myArray
-    $('#sortable li').remove();
-    countTodos();
+//mark task as done
+function done(doneItem, id){
+    var done = doneItem;    
+    $.get("/post/done", {id: id}, function(res){
+      createDone(doneItem, id);
+      countTodos();
+    },'text');
 }
 
 //remove done task from list
 function removeItem(element){
-    $(element).parent().remove();
+    var id = $(element).attr('id');
+    $.get("/post/delete", {id: id}, function(res){
+      $(element).parent().remove();      
+    },'text');    
 }
+
+function populateList(){
+  $.get("/post/list", {}, function(res){      
+      var data = JSON.parse(res);
+      $.each(data.lists, function(index, item){
+        if(!item.done_at){
+          createTodo(item.topic, item.id);         
+        }else{
+          createDone(item.topic, item.id);
+        }
+      });
+      countTodos();
+    },'text');   
+}
+
+populateList();
